@@ -2,7 +2,7 @@
 module.exports = {
     name: 'time',
     description: 'Shows current time in Tehran',
-    async execute(message) {
+    async execute(message, args) {
         const now = new Date();
 
         // تنظیم ساعت به تایم‌زون تهران (Asia/Tehran)

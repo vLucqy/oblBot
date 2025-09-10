@@ -8,7 +8,6 @@ const {
     InteractionType,
     EmbedBuilder
 } = require('discord.js');
-const config = require('../config.json');
 
 module.exports = {
     name: 'interactionCreate',
@@ -45,7 +44,7 @@ module.exports = {
             const name = interaction.fields.getTextInputValue('nameInput');
             const age = interaction.fields.getTextInputValue('ageInput');
 
-            const staffChannel = await client.channels.fetch(config.staffChannelId);
+            const staffChannel = await client.channels.fetch(process.env.STAFF_CHANNEL_ID);
             if (!staffChannel) return interaction.reply({ content: 'Staff channel not found.', ephemeral: true });
 
             const embed = new EmbedBuilder()
@@ -87,7 +86,7 @@ module.exports = {
 
             // ✅ Approve
             if (decision === 'yes') {
-                await member.roles.add(config.verifiedRoleId).catch(() => null);
+                await member.roles.add(process.env.VERIFIED_ROLE_ID).catch(() => null);
                 return interaction.update({ content: `✅ ${member.user.tag} has been verified.`, components: [] });
             }
 

@@ -1,6 +1,5 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityType } = require('discord.js');
 const { joinVoiceChannel } = require('@discordjs/voice');
-const config = require('../config.json');
 
 module.exports = {
     name: 'clientReady',
@@ -9,7 +8,7 @@ module.exports = {
         console.log(`✅ Logged in as ${client.user.tag}`);
 
         // ===== Set Status =====
-        const guild = client.guilds.cache.get(config.guildId);
+        const guild = client.guilds.cache.get(process.env.GUILD_ID);
         if (guild) {
             const updateStatus = () => {
                 client.user.setActivity(`${guild.memberCount} members`, { type: ActivityType.Watching });
@@ -20,12 +19,14 @@ module.exports = {
 
         // ===== Join Voice 24/7 =====
         try {
-            const voiceChannel = await client.channels.fetch(config.voiceChannelId);
+            const voiceChannel = await client.channels.fetch(process.env.VOICE_CHANNEL_ID);
             if (voiceChannel && voiceChannel.isVoiceBased()) {
                 joinVoiceChannel({
                     channelId: voiceChannel.id,
-                    guildId: guild.id,
-                    adapterCreator: guild.voiceAdapterCreator
+                    guildId: process.env.GUILD_ID,
+                    adapterCreator: guild.voiceAdapterCreator,
+                    selfDeaf: true,
+                    selfMute: false
                 });
                 console.log(`✅ Connected to voice channel: ${voiceChannel.name}`);
             } else {
@@ -37,7 +38,7 @@ module.exports = {
 
         // ===== Verify Button =====
         try {
-            const verifyChannel = await client.channels.fetch(config.verifyChannelId);
+            const verifyChannel = await client.channels.fetch(process.env.VERIFY_CHANNEL_ID);
             if (!verifyChannel) return console.log('❌ Verify channel not found');
 
             const buttonRow = new ActionRowBuilder().addComponents(
@@ -48,9 +49,9 @@ module.exports = {
             );
 
             let message;
-            if (config.verifyMessageId) {
+            if (process.env.VERIFY_MESSAGE_ID) {
                 try {
-                    message = await verifyChannel.messages.fetch(config.verifyMessageId);
+                    message = await verifyChannel.messages.fetch(process.env.VERIFY_MESSAGE_ID);
                 } catch {}
             }
 

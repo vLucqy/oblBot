@@ -1,11 +1,10 @@
 const { joinVoiceChannel } = require('@discordjs/voice');
-const config = require('../config.json');
 
 function connectToVoice(client) {
-    const guild = client.guilds.cache.get(config.guildId);
+    const guild = client.guilds.cache.get(process.env.GUILD_ID);
     if (!guild) return console.log("❌ Guild not found!");
 
-    const channel = guild.channels.cache.get(config.voiceChannelId);
+    const channel = guild.channels.cache.get(process.env.VOICE_CHANNEL_ID);
     if (!channel) return console.log("❌ Voice channel not found!");
 
     try {
