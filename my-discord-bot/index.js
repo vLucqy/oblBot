@@ -1,7 +1,17 @@
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const config = require('./config.json');
+
+// به جای config.json از Environment Variables استفاده می‌کنیم
+const config = {
+    token: process.env.TOKEN,
+    clientId: process.env.CLIENT_ID,
+    guildId: process.env.GUILD_ID,
+    prefix: process.env.PREFIX || "!",
+    verifyChannelId: process.env.VERIFY_CHANNEL_ID,
+    staffChannelId: process.env.STAFF_CHANNEL_ID,
+    verifiedRoleId: process.env.VERIFIED_ROLE_ID
+};
 
 const client = new Client({
     intents: [
