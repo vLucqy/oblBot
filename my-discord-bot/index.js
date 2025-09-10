@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
-// به جای config.json از Environment Variables استفاده می‌کنیم
+// Config از Environment Variables
 const config = {
     token: process.env.TOKEN,
     clientId: process.env.CLIENT_ID,
@@ -10,7 +10,9 @@ const config = {
     prefix: process.env.PREFIX || "!",
     verifyChannelId: process.env.VERIFY_CHANNEL_ID,
     staffChannelId: process.env.STAFF_CHANNEL_ID,
-    verifiedRoleId: process.env.VERIFIED_ROLE_ID
+    verifiedRoleId: process.env.VERIFIED_ROLE_ID,
+    verifyMessageId: process.env.VERIFY_MESSAGE_ID, // برای verify message
+    voiceChannelId: process.env.VOICE_CHANNEL_ID    // برای 24/7 voice
 };
 
 const client = new Client({
@@ -52,8 +54,8 @@ const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.existsSync(eventsPath) ? fs.readdirSync(eventsPath).filter(f => f.endsWith('.js')) : [];
 for (const file of eventFiles) {
     const event = require(path.join(eventsPath, file));
-    if (event.once) client.once(event.name, (...args) => event.execute(...args, client));
-    else client.on(event.name, (...args) => event.execute(...args, client));
+    if (event.once) client.once(event.name, (...args) => event.execute(...args, client, config));
+    else client.on(event.name, (...args) => event.execute(...args, client, config));
 }
 
 // Login
